@@ -27,7 +27,7 @@ describe Octokit::Client::Pulls do
         with(:pull => {:base => "master", :head => "pengwynn:octokit", :issue => "15"}).
         to_return(:body => fixture("v3/pull_created.json"))
       pull = @client.create_pull_request_for_issue("pengwynn/octokit", "master", "pengwynn:octokit", "15")
-      pull.number.should == 15 
+      pull.number.should == 15
     end
 
   end
@@ -49,9 +49,32 @@ describe Octokit::Client::Pulls do
       stub_get("https://api.github.com/repos/pengwynn/octokit/pulls/67").
         to_return(:body => fixture("v3/pull_request.json"))
       pull = @client.pull("pengwynn/octokit", 67)
-      pull.number.should == 67 
+      pull.number.should == 67
     end
 
   end
+
+
+  describe ".close_pull_request" do
+
+     it "should return a pull request" do
+       stub_patch("https://api.github.com/repos/pengwynn/octokit/pulls/67").
+         with(:state => "closed").
+         to_return(:body => fixture("v3/close_request.json"))
+       close = @client.close_pull_request("pengwynn/octokit", 67)
+       close.number.should == 67
+       close.state.should == "closed"
+     end
+
+    it "should return a pull request" do
+       stub_patch("https://api.github.com/repos/pengwynn/octokit/pulls/67").
+         with(:state => "closed").
+         to_return(:body => fixture("v3/close_request.json"))
+       close = @client.close_pull_request("pengwynn/octokit", 67, :title => "Awesome", :body => "I rule")
+       close.number.should == 67
+       close.state.should == "closed"
+     end
+
+   end
 
 end

@@ -29,6 +29,11 @@ module Octokit
         get("repos/#{Repository.new(repo)}/pulls/#{number}", options)
       end
       alias :pull :pull_request
+
+      def close_pull_request(repo, number, options={})
+        patch("repos/#{Repository.new(repo)}/pulls/#{number}",
+              options.merge({:state => "closed"}))
+      end
     end
   end
 end
